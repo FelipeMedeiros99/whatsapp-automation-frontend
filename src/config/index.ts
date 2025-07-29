@@ -1,36 +1,28 @@
 import axios, { Axios, AxiosError, AxiosResponse } from "axios"
 
-export class Api{
+export class Api {
   api;
-  constructor(){
+  constructor() {
     this.api = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL,
       timeout: 15000,
-      headers: {'X-Custom-Header': 'foobar'}
+      headers: { 'X-Custom-Header': 'foobar' }
     })
   }
 
-  async getQrcode(): Promise<AxiosResponse | AxiosError>{
-    try{
-      const qrCode = await this.api.get("connect");
-      return qrCode;
-    }catch(e){
-      return e as AxiosError
-    }
+  async getQrcode(): Promise<AxiosResponse | AxiosError> {
+    const qrCode = await this.api.get("connect");
+    return qrCode;
   }
 
-  async getStatus(){
-    try{
-      return await this.api.get("status")
-    }catch(e){
-      return e
-    }
+  async getStatus() {
+    return await this.api.get("status")
   }
 
-  async desconnect(){
-    try{
+  async desconnect() {
+    try {
       return await this.api.get("desconnect")
-    }catch(e){
+    } catch (e) {
       return e
     }
   }

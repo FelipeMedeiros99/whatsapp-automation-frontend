@@ -17,15 +17,25 @@ export default function Home() {
     setQrcode(qr)
   }
 
+  const connect = async()=>{
+    setQrcode("");
+    setIsLoged(false)
+    try {
+      const response = await api.getQrcode() as AxiosResponse;
+      console.log(response)
+      await updateQrCode(response.data)
+    } catch (e) {
+      setQrcode("Erro ao carregar qr-code")
+      console.log(e)
+    }
+  }
+
   useEffect(() => {
     (async () => {
-      try {
-        const response = await api.getQrcode() as AxiosResponse;
-        updateQrCode(response.data)
-      } catch (e) {
-        setQrcode("Erro ao carregar qr-code")
-        console.log(e)
-      }
+      console.log('Estou aqui')
+      const response = await api.getStatus() as AxiosResponse;
+      if(!response?.data?.isLoged) await connect();
+      else setIsLoged(true)
     })()
   }, []);
 
@@ -44,11 +54,11 @@ export default function Home() {
   const validConection = async () => {
     try {
       const response = await api.getStatus() as AxiosResponse;
-      console.log(response)
       if (!response?.data?.isLoged) {
         alert("Whatsapp desconectado")
-        desconnect()
-
+        connect()
+      }else{
+        alert("Whatsapp conectado")
       }
     } catch (e) {
       alert("Erro ao verificar status")
@@ -56,13 +66,9 @@ export default function Home() {
     }
   }
 
-  const desconnect = () => {
-    window.location.reload()
-  }
-
   return (
     <main>
-      {!qrCode &&
+      {!qrCode && !isLoged &&
       <div className="spinner">
         <p>Carregando qr-code</p>
         <ClipLoader size={200}/>
@@ -73,7 +79,7 @@ export default function Home() {
         <div className="qr-code">
           <p>Leia o qr-code abaixo</p>
           <img src={qrCode} />
-          <button onClick={desconnect}>Gerar novamente</button>
+          <button onClick={connect}>Gerar novamente</button>
         </div>
       }
 
@@ -85,6 +91,7 @@ export default function Home() {
 
           <div className="container-buttons">
             <button onClick={validConection}>Testar conexão</button>
+            <button onClick={connect}>Gerar Qr-code</button>
           </div>
         </div>
       }
