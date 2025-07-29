@@ -1,10 +1,11 @@
 .header{
-  height: 2.5rem;
+  height: var(--spacing-xxl);
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  background-color: var(--color-primary-dark);
 }
 
 .container-image{
@@ -17,10 +18,10 @@
   position: absolute;
   right: 0;
   top: 0;
-  transform: translate(-10%, 10%);
-  font-size: 2rem;
+  transform: translate(-30%, 20%);
+  font-size: var(--font-size-xxl);
 }
-
+  
 .header .icon:hover{
   cursor: pointer;
 }
