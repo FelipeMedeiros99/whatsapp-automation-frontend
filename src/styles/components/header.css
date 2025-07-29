@@ -1,13 +1,65 @@
 .header{
-  height: 4rem;
+  height: 2.5rem;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .container-image{
   position: relative;
   height: 100%;
   width: 10rem;
+}
+
+.header .icon{
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(-10%, 10%);
+  font-size: 2rem;
+}
+
+.header .icon:hover{
+  cursor: pointer;
+}
+
+.right-bar{
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: var(--width-size-right-bar);
+  height: 100vh;
+  background-color: white;
+  transition: right 1s ease;
+  box-shadow: 0 0 0.2rem black;
+}
+
+.right-bar.none{
+  right: -100%;
+  top: 0;
+  transition: right 1s ease;
+}
+
+.container-links{
+  margin-top: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.container-links a{
+  padding: var(--spacing-md) var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  /* height: var(--spacing-xl); */
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.container-links a:hover{
+  background-color: var(--color-primary-dark);
+  color: white;
 }
