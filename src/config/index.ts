@@ -17,7 +17,21 @@ export class Api{
     }catch(e){
       return e as AxiosError
     }
-  
   }
 
+  async getStatus(){
+    try{
+      return await this.api.get("status")
+    }catch(e){
+      return e
+    }
+  }
+
+  async desconnect(){
+    try{
+      return await this.api.get("desconnect")
+    }catch(e){
+      return e
+    }
+  }
 }
