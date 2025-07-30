@@ -5,7 +5,6 @@ export class Api {
   constructor() {
     this.api = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL,
-      timeout: 15000,
       headers: { 'X-Custom-Header': 'foobar' }
     })
   }
