@@ -1,7 +1,7 @@
-export default function Messages(){
+export default function ManagerMessages(){
   return(
-    <main>
-      olá 
-    </main>
+    <div>
+      mensagens aqui
+    </div>
   )
 }

@@ -2,14 +2,16 @@
 
 import { Api } from "@/config"
 import { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as QRCode from "qrcode";
 import { ClipLoader } from "react-spinners";
 
 export default function Home() {
   const api = new Api;
+  const validIdUserIsLoged = useRef<NodeJS.Timeout |null>(null)
   const [qrCode, setQrcode] = useState<any>(null);
-  const [isLoged, setIsLoged] = useState(false)
+  const [isLoged, setIsLoged] = useState(false);
+  const [isError, setIsError] = useState(false);
   // const [messages, setMessages] = useState<string | undefined>([])
 
   const updateQrCode = async (data: string) => {
@@ -18,64 +20,87 @@ export default function Home() {
   }
 
   const connect = async()=>{
-    setQrcode("");
-    setIsLoged(false)
+    setQrcode(null);
+    setIsLoged(false);
+    setIsError(false);
+    
     try {
       const response = await api.getQrcode() as AxiosResponse;
-      console.log(response)
       await updateQrCode(response.data)
     } catch (e) {
-      setQrcode("Erro ao carregar qr-code")
-      console.log(e)
+      // setQrcode("Erro ao carregar qr-code")
+      // alert("Erro ao carregar qr-code")
+      setIsError(true)
+      if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+    }
+  }
+
+  useEffect(()=>{
+    validIdUserIsLoged.current = setInterval(async () => {
+      try {
+        const response = await api.getStatus() as AxiosResponse;
+        if (response?.data?.isLoged) {
+          setIsError(false)
+          setIsLoged(true)
+        }
+      } catch (e) {
+        setIsError(true)
+        if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+      }
+    }, 3000)
+
+  }, [qrCode])
+
+
+  const validConection = async () => {
+    try {
+      const response = await api.getStatus() as AxiosResponse;
+      if (response?.data?.isLoged === false) {
+        alert("Whatsapp desconectado")
+        await connect()
+      }else{
+        alert("Whatsapp conectado")
+      }
+    } catch (e) {
+      setIsError(true)
+      if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
     }
   }
 
   useEffect(() => {
     (async () => {
-      console.log('Estou aqui')
-      const response = await api.getStatus() as AxiosResponse;
-      if(!response?.data?.isLoged) await connect();
-      else setIsLoged(true)
+      try{
+        const response = await api.getStatus() as AxiosResponse;
+        if(response?.data?.isLoged === false) {
+          await connect()
+        }else {
+          setIsLoged(true)
+          setQrcode(null)
+        };
+      }catch(e){
+        setIsError(true)
+        if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+      }
     })()
   }, []);
 
-  const validLogin = setInterval(async () => {
-    try {
-      const response = await api.getStatus() as AxiosResponse;
-      if (response?.data?.isLoged) {
-        setIsLoged(true)
-        clearInterval(validLogin)
-      }
-    } catch (e) {
-      console.log("Erro ao solicitar status: ", e)
-    }
-  }, 3000)
-
-  const validConection = async () => {
-    try {
-      const response = await api.getStatus() as AxiosResponse;
-      if (!response?.data?.isLoged) {
-        alert("Whatsapp desconectado")
-        connect()
-      }else{
-        alert("Whatsapp conectado")
-      }
-    } catch (e) {
-      alert("Erro ao verificar status")
-      console.log(e)
-    }
-  }
-
   return (
     <main>
-      {!qrCode && !isLoged &&
+      {!qrCode && !isLoged && !isError &&
       <div className="spinner">
         <p>Carregando qr-code</p>
         <ClipLoader size={200}/>
       </div>
       }
 
-      {qrCode && !isLoged &&
+      {isError && !qrCode && !isLoged &&
+        <div className="connection-error">
+          <p>Erro ao se comunicar com o servidor, reinicie-o e tente novamente</p>
+          <button onClick={connect}>Tentar novamente</button>
+        </div>
+      }
+
+      {qrCode && !isLoged && !isError &&
         <div className="qr-code">
           <p>Leia o qr-code abaixo</p>
           <img src={qrCode} />
@@ -85,19 +110,18 @@ export default function Home() {
 
 
 
-      {isLoged &&
+      {
+      isLoged && !isError &&
+      // true &&
         <div className="loged">
           <p>Você está logado!</p>
 
           <div className="container-buttons">
             <button onClick={validConection}>Testar conexão</button>
-            <button onClick={connect}>Gerar Qr-code</button>
+            <button onClick={connect}>Reconectar</button>
           </div>
         </div>
       }
-
-
-
     </main>
   );
 }

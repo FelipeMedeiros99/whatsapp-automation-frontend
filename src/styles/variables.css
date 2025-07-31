@@ -7,10 +7,11 @@
   --color-secondary: #afcdcd;
   --color-secondary-light: #d1e5e5;
   --color-secondary-dark: #89a5a5;
-
+  
   --color-accent: #ffb347;
   --color-danger: #ff4d4f;
-  --color-success: #4caf50;
+  --color-success: #1cc21c;
+  --color-success-dark: #258d25;
   --color-warning: #ff9800;
 
   /* ========= Escala de cinzas ========= */
