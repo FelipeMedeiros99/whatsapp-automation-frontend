@@ -1,0 +1,15 @@
+{
+  "name": "Automação WhatsApp",
+  "short_name": "BotZap",
+  "description": "Bot para automatizar respostas no WhatsApp",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0fadc3",
+  "theme_color": "#0fadc3",
+  "icons": [
+    {
+      "src": "/images/icone-tema.png",
+      "type": "image/png"
+    }
+  ]
+}
