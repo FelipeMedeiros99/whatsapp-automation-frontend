@@ -8,10 +8,11 @@ import { ClipLoader } from "react-spinners";
 
 export default function Home() {
   const api = new Api;
-  const validIdUserIsLoged = useRef<NodeJS.Timeout |null>(null)
+  const validIdUserIsLoged = useRef<NodeJS.Timeout | null>(null)
   const [qrCode, setQrcode] = useState<any>(null);
   const [isLoged, setIsLoged] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isLoadingQrCode, setIsLoadingQrCode] = useState(false);
   // const [messages, setMessages] = useState<string | undefined>([])
 
   const updateQrCode = async (data: string) => {
@@ -19,33 +20,41 @@ export default function Home() {
     setQrcode(qr)
   }
 
-  const connect = async()=>{
+  const connect = async () => {
     setQrcode(null);
     setIsLoged(false);
     setIsError(false);
-    
+
     try {
+      setIsLoadingQrCode(true)
       const response = await api.getQrcode() as AxiosResponse;
       await updateQrCode(response.data)
+      setIsLoadingQrCode(false)
     } catch (e) {
       // setQrcode("Erro ao carregar qr-code")
       // alert("Erro ao carregar qr-code")
       setIsError(true)
-      if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+      if (validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     validIdUserIsLoged.current = setInterval(async () => {
       try {
-        const response = await api.getStatus() as AxiosResponse;
-        if (response?.data?.isLoged) {
-          setIsError(false)
-          setIsLoged(true)
+        if (!isLoadingQrCode) {
+          const response = await api.getStatus() as AxiosResponse;
+          if (response?.data?.isLoged) {
+            if (validIdUserIsLoged?.current) {
+              clearInterval(validIdUserIsLoged?.current)
+
+            };
+            setIsError(false)
+            setIsLoged(true)
+          }
         }
       } catch (e) {
         setIsError(true)
-        if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+        if (validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
       }
     }, 3000)
 
@@ -58,28 +67,28 @@ export default function Home() {
       if (response?.data?.isLoged === false) {
         alert("Whatsapp desconectado")
         await connect()
-      }else{
+      } else {
         alert("Whatsapp conectado")
       }
     } catch (e) {
       setIsError(true)
-      if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+      if (validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
     }
   }
 
   useEffect(() => {
     (async () => {
-      try{
+      try {
         const response = await api.getStatus() as AxiosResponse;
-        if(response?.data?.isLoged === false) {
+        if (response?.data?.isLoged === false) {
           await connect()
-        }else {
+        } else {
           setIsLoged(true)
           setQrcode(null)
         };
-      }catch(e){
+      } catch (e) {
         setIsError(true)
-        if(validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
+        if (validIdUserIsLoged?.current) clearInterval(validIdUserIsLoged?.current);
       }
     })()
   }, []);
@@ -87,10 +96,10 @@ export default function Home() {
   return (
     <main>
       {!qrCode && !isLoged && !isError &&
-      <div className="spinner">
-        <p>Carregando qr-code</p>
-        <ClipLoader size={200}/>
-      </div>
+        <div className="spinner">
+          <p>Carregando qr-code</p>
+          <ClipLoader size={200} />
+        </div>
       }
 
       {isError && !qrCode && !isLoged &&
@@ -111,8 +120,8 @@ export default function Home() {
 
 
       {
-      isLoged && !isError &&
-      // true &&
+        isLoged && !isError &&
+        // true &&
         <div className="loged">
           <p>Você está logado!</p>
 
