@@ -26,4 +26,26 @@ export class Api {
       return e
     }
   }
+
+  async getRestriction(){
+    try{
+      const restrictionResponse: AxiosResponse = await this.api.get("restriction")
+      return restrictionResponse.data;
+    }catch(e){
+      console.log("Erro ao buscar restrições: ", e)
+      return null
+    }
+  }
+
+  async updateRestriction(id: number, data: {restriction: string}){
+    try{
+      const response: AxiosResponse = await this.api.put(`restriction/${id}`, data)
+      return response;
+    }catch(e){
+      console.log("Erro ao atualizar restrições: ", e)
+      return null
+    }
+  }
 }
+
+export const api = new Api();
