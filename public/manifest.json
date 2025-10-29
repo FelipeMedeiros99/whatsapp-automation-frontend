@@ -4,8 +4,8 @@
   "description": "Bot para automatizar respostas no WhatsApp",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0fadc3",
-  "theme_color": "#0fadc3",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
   "icons": [
     {
       "src": "/images/icone-tema.png",
