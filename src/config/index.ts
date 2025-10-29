@@ -10,7 +10,7 @@ export class Api {
     })
   }
 
-  async getQrcode(): Promise<AxiosResponse | AxiosError> {
+  async getQrcode(){
     const qrCode = await this.api.get("connect");
     return qrCode;
   }
