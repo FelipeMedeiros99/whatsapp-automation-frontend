@@ -27,7 +27,7 @@ export class Api {
     }
   }
 
-  async getRestriction(){
+  async getAllRestriction(){
     try{
       const restrictionResponse: AxiosResponse = await this.api.get("restriction")
       return restrictionResponse.data;
@@ -37,7 +37,7 @@ export class Api {
     }
   }
 
-  async updateRestriction(id: number, data: {restriction: string}){
+  async updateRestriction(id: number, data: {restriction?: string, restrictionNumber?: number}){
     try{
       const response: AxiosResponse = await this.api.put(`restriction/${id}`, data)
       return response;
