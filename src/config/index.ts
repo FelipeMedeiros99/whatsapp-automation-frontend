@@ -21,7 +21,7 @@ export class Api {
 
   async desconnect() {
     try {
-      return await this.api.get("desconnect")
+      return await this.api.get("disconnect")
     } catch (e) {
       return e
     }

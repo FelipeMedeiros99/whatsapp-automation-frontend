@@ -53,6 +53,32 @@ export default function Home() {
     }
   }, [generateQrCode]);
 
+  const getAnoterConection = useCallback(async ()=>{
+    console.log("Tentando buscar QR Code...");
+    setQrCodeDataUrl(null);
+    if (statusCheckIntervalRef.current) {
+      clearInterval(statusCheckIntervalRef.current);
+    }
+    setStatus('loading_qr');
+    setErrorMessage(null);
+
+    try {
+      await api.desconnect() // removing past connection
+
+      const response = await api.getQrcode();
+      
+      if (response && response?.data) {
+        await generateQrCode(response?.data);
+      } else {
+        throw new Error("Resposta inválida da API ao buscar QR Code.");
+      }
+    } catch (error: any) {
+      console.error("Erro ao buscar QR code:", error);
+      setErrorMessage(error.message || "Erro ao buscar QR code. Verifique o servidor.");
+      setStatus('error');
+    }
+  }, [generateQrCode])
+
   
   const checkStatus = useCallback(async () => {
     console.log("Verificando status (polling)...");
