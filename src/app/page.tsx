@@ -18,8 +18,8 @@ export default function Home() {
   
   const generateQrCode = useCallback(async (data: string) => {
     try {
-      const url = await QRCode.toDataURL(data);
-      setQrCodeDataUrl(url);
+      // const url = await QRCode.toDataURL(data);
+      setQrCodeDataUrl(data);
       setStatus('displaying_qr');
       setErrorMessage(null);
     } catch (error) {
@@ -40,6 +40,7 @@ export default function Home() {
 
     try {
       const response = await api.getQrcode();
+      console.log(response)
       if (response && response?.data) {
         await generateQrCode(response?.data);
       } else {
@@ -122,7 +123,8 @@ export default function Home() {
   
   useEffect(() => {
     setStatus('initializing');
-    api.getStatus().then(res => { 
+    api.getStatus().then(res => {
+      console.log(res.data)
       if (!res?.data?.isLoged) {
         fetchQrCode();
       } else {
