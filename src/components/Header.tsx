@@ -8,7 +8,8 @@ import { IoClose, IoMenu } from "react-icons/io5";
 export default function Header() {
   const links = [
     { to: "/", key: "Conectar" },
-    { to: "/restriction", key: "Configurar restrição" }
+    { to: "/restriction", key: "Configurar restrição" },
+    { to: "/default_messages", key: "Configurar mensagens" }
   ];
   const [isRightBarVisible, setIsRightBarVisible] = useState(false);
   const rightRef = useRef<HTMLDivElement>(null);
