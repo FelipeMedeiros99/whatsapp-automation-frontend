@@ -9,9 +9,9 @@ export default function Header() {
   const links = [
     { to: "/", key: "Conectar" },
     { to: "/rules", key: "Regras da IA" },
-    { to: "/restriction", key: "Configurações" },
-    { to: "/default_messages", key: "Configurar mensagens" },
     { to: "/contacts", key: "Contatos" },
+    { to: "/default_messages", key: "Configurar mensagens" },
+    { to: "/restriction", key: "Configurações" },
   ];
   const [isRightBarVisible, setIsRightBarVisible] = useState(false);
   const rightRef = useRef<HTMLDivElement>(null);
