@@ -125,21 +125,21 @@ export default function BotRulesPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         {/* Header da Página */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-3xl font-bold text-gray-800">
               Regras de Negócio (Prompt)
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-base text-gray-600 mt-1">
               Gerencie as diretrizes de comportamento e conhecimento do
               assistente virtual.
             </p>
           </div>
           <button
             onClick={openModalForCreate}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="rounded-lg bg-blue-600 px-5 py-2.5 text-base font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             + Nova Regra
           </button>
@@ -147,16 +147,16 @@ export default function BotRulesPage() {
 
         {/* Tabela de Dados */}
         <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-          <table className="min-w-full divide-y divide-gray-200 text-left text-sm">
+          <table className="min-w-full divide-y divide-gray-200 text-left text-base">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-6 py-4 font-semibold text-gray-700">
+                <th className="px-6 py-4 font-semibold text-gray-800">
                   Título / Gatilho
                 </th>
-                <th className="px-6 py-4 font-semibold text-gray-700">
+                <th className="px-6 py-4 font-semibold text-gray-800">
                   Descrição (Uso da IA)
                 </th>
-                <th className="px-6 py-4 font-semibold text-gray-700 text-right">
+                <th className="px-6 py-4 font-semibold text-gray-800 text-right">
                   Ações
                 </th>
               </tr>
@@ -167,26 +167,27 @@ export default function BotRulesPage() {
                   key={rule.id}
                   className="hover:bg-gray-50/50 transition-colors"
                 >
-                  <td className="px-6 py-4 font-medium text-gray-900 align-top max-w-[200px]">
+                  <td className="px-6 py-5 font-medium text-gray-900 align-top max-w-[250px]">
                     {rule.title}
                   </td>
-                  <td className="px-6 py-4 text-gray-600 align-top whitespace-pre-wrap max-w-md">
+                  <td className="px-6 py-5 text-gray-700 align-top whitespace-pre-wrap max-w-2xl leading-relaxed">
                     {rule.description || (
                       <span className="italic text-gray-400">
                         Sem descrição
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 align-top text-right whitespace-nowrap">
+                  <td className="px-6 py-5 align-top text-right whitespace-nowrap">
                     <button
                       onClick={() => openModalForEdit(rule)}
-                      className="mr-3 text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                      className="mr-4 text-blue-600 hover:text-blue-800 font-semibold transition-colors cursor-pointer"
                     >
                       Editar
                     </button>
                     <button
+                      disabled={rule.id === 1}
                       onClick={() => handleDelete(rule.id)}
-                      className="text-red-500 hover:text-red-700 font-medium transition-colors"
+                      className="text-red-600 hover:text-red-800 font-semibold transition-colors disabled:opacity-0 cursor-pointer disabled:cursor-auto "
                     >
                       Excluir
                     </button>
@@ -198,7 +199,7 @@ export default function BotRulesPage() {
                 <tr>
                   <td
                     colSpan={3}
-                    className="px-6 py-8 text-center text-gray-500"
+                    className="px-6 py-10 text-center text-gray-500 text-lg"
                   >
                     Nenhuma regra cadastrada. Clique em "Nova Regra" para
                     iniciar.
@@ -210,17 +211,18 @@ export default function BotRulesPage() {
         </div>
       </div>
 
-      {/* Modal de Formulário (Renderização Condicional) */}
+      {/* Modal de Formulário (Quase Full-Screen) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm transition-opacity">
-          <div className="w-full max-w-3xl rounded-xl bg-white shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-              <h2 className="text-xl font-bold text-gray-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6 backdrop-blur-sm transition-opacity">
+          <div className="w-full max-w-[95vw] h-[95vh] rounded-2xl bg-white shadow-2xl overflow-hidden flex flex-col">
+            <div className="px-8 py-5 border-b border-gray-200 flex justify-between items-center bg-gray-50 shrink-0">
+              <h2 className="text-2xl font-bold text-gray-800">
                 {editingRuleId ? "Editar Regra" : "Criar Nova Regra"}
               </h2>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-500 hover:text-gray-800 transition-colors bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                title="Fechar (Esc)"
               >
                 <svg
                   className="w-6 h-6"
@@ -240,12 +242,12 @@ export default function BotRulesPage() {
 
             <form
               onSubmit={handleSubmit}
-              className="flex-1 overflow-y-auto p-6 flex flex-col gap-5"
+              className="flex-1 overflow-y-auto p-8 flex flex-col gap-6"
             >
               <div>
                 <label
                   htmlFor="title"
-                  className="block text-sm font-semibold text-gray-700 mb-1"
+                  className="block text-base font-bold text-gray-800 mb-2"
                 >
                   Título <span className="text-red-500">*</span>
                 </label>
@@ -258,14 +260,14 @@ export default function BotRulesPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+                  className="w-full rounded-lg border border-gray-300 px-5 py-3 text-base text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-colors shadow-sm"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="description"
-                  className="block text-sm font-semibold text-gray-700 mb-1"
+                  className="block text-base font-bold text-gray-800 mb-2"
                 >
                   Descrição / Gatilho (O que a IA deve saber para usar esta
                   regra)
@@ -278,42 +280,41 @@ export default function BotRulesPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+                  className="w-full rounded-lg border border-gray-300 px-5 py-3 text-base text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-colors shadow-sm leading-relaxed"
                 />
               </div>
 
-              <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col min-h-[300px]">
                 <label
                   htmlFor="rule"
-                  className="block text-sm font-semibold text-gray-700 mb-1"
+                  className="block text-base font-bold text-gray-800 mb-2"
                 >
                   Conteúdo da Regra (Prompt Bruto)
                 </label>
                 <textarea
                   id="rule"
-                  rows={8}
                   placeholder="Ex: - Check-in: A partir das 14h&#10;- Check-out: Até as 12h..."
                   value={formData.rule}
                   onChange={(e) =>
                     setFormData({ ...formData, rule: e.target.value })
                   }
-                  className="w-full flex-1 min-h-[200px] font-mono text-sm rounded-md border border-gray-300 px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors resize-y"
+                  className="w-full flex-1 rounded-lg border border-gray-300 px-5 py-4 text-base text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-colors shadow-sm resize-none leading-relaxed"
                 />
               </div>
 
-              <div className="mt-2 flex justify-end gap-3 pt-4 border-t border-gray-100">
+              <div className="mt-4 flex justify-end gap-4 pt-6 border-t border-gray-200 shrink-0">
                 <button
                   type="button"
                   onClick={closeModal}
                   disabled={isSubmitting}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="px-6 py-3 text-base font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors shadow-sm"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                  className="px-8 py-3 text-base font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center"
                 >
                   {isSubmitting ? "Salvando..." : "Salvar Regra"}
                 </button>
