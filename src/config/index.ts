@@ -21,32 +21,6 @@ export class Api {
     });
   }
 
-  async getContacts(): Promise<IContact[]> {
-    try {
-      const response: AxiosResponse = await this.api.get("users");
-      return response.data;
-    } catch (e) {
-      console.error("Erro ao buscar contatos: ", e);
-      // Retornar array vazio em caso de erro previne quebras no frontend (map of undefined)cd
-      return [];
-    }
-  }
-
-  async updateContactBotStatus(
-    number: string,
-    isBotStoped: boolean,
-  ): Promise<boolean> {
-    try {
-      // O encodeURIComponent é crítico aqui para que o "@lid" não quebre a rota da API
-      const safeNumber = encodeURIComponent(number);
-      await this.api.put(`users/${safeNumber}`, { isBotStoped });
-      return true;
-    } catch (e) {
-      console.error(`Erro ao atualizar contato ${number}: `, e);
-      return false;
-    }
-  }
-
   // --- MÉTODOS DE CONEXÃO ---
   async getQrcode() {
     return await this.api.get("connect");
@@ -143,6 +117,43 @@ export class Api {
     } catch (e) {
       console.log("Erro ao deletar mensagem padrão: ", e);
       throw e;
+    }
+  }
+
+  async getContacts(): Promise<IContact[]> {
+    try {
+      const response: AxiosResponse = await this.api.get("users");
+      return response.data;
+    } catch (e) {
+      console.error("Erro ao buscar contatos: ", e);
+      // Retornar array vazio em caso de erro previne quebras no frontend (map of undefined)cd
+      return [];
+    }
+  }
+
+  async updateContactBotStatus(
+    number: string,
+    isBotStoped: boolean,
+  ): Promise<boolean> {
+    try {
+      // O encodeURIComponent é crítico aqui para que o "@lid" não quebre a rota da API
+      const safeNumber = encodeURIComponent(number);
+      await this.api.put(`users/${safeNumber}`, { isBotStoped });
+      return true;
+    } catch (e) {
+      console.error(`Erro ao atualizar contato ${number}: `, e);
+      return false;
+    }
+  }
+
+  async deleteUser(number: string) {
+    try {
+      const safeNumber = encodeURIComponent(number);
+      await this.api.delete(`users/${safeNumber}`);
+      return true;
+    } catch (e) {
+      console.error(`Erro ao deletar contato ${number}: `, e);
+      return false;
     }
   }
 }
