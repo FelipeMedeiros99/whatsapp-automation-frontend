@@ -10,6 +10,14 @@ export interface IContact {
   timeoutId: string | null;
 }
 
+// Adicione a interface no topo do arquivo
+export interface IBotRule {
+  id: number;
+  title: string;
+  description: string | null;
+  rule: string | null;
+}
+
 export class Api {
   api: AxiosInstance; // Tipagem correta para a instância do Axios
 
@@ -153,6 +161,49 @@ export class Api {
       return true;
     } catch (e) {
       console.error(`Erro ao deletar contato ${number}: `, e);
+      return false;
+    }
+  }
+
+  async getBotRules(): Promise<IBotRule[]> {
+    try {
+      const response = await this.api.get("bot-rules/");
+      return response.data;
+    } catch (e) {
+      console.error("Erro ao buscar regras: ", e);
+      return [];
+    }
+  }
+
+  async createBotRule(data: Omit<IBotRule, "id">): Promise<IBotRule | null> {
+    try {
+      const response = await this.api.post("bot-rules/", data);
+      return response.data;
+    } catch (e) {
+      console.error("Erro ao criar regra: ", e);
+      return null;
+    }
+  }
+
+  async updateBotRule(
+    id: number,
+    data: Partial<IBotRule>,
+  ): Promise<IBotRule | null> {
+    try {
+      const response = await this.api.put(`bot-rules/${id}`, data);
+      return response.data;
+    } catch (e) {
+      console.error(`Erro ao atualizar regra ${id}: `, e);
+      return null;
+    }
+  }
+
+  async deleteBotRule(id: number): Promise<boolean> {
+    try {
+      await this.api.delete(`bot-rules/${id}`);
+      return true;
+    } catch (e) {
+      console.error(`Erro ao deletar regra ${id}: `, e);
       return false;
     }
   }

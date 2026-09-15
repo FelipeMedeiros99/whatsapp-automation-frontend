@@ -8,7 +8,8 @@ import { IoClose, IoMenu } from "react-icons/io5";
 export default function Header() {
   const links = [
     { to: "/", key: "Conectar" },
-    { to: "/restriction", key: "Configurar restrição" },
+    { to: "/rules", key: "Regras da IA" },
+    { to: "/restriction", key: "Configurações" },
     { to: "/default_messages", key: "Configurar mensagens" },
     { to: "/contacts", key: "Contatos" },
   ];
