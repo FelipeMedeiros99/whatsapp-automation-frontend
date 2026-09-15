@@ -1,4 +1,14 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios"
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+
+export interface IContact {
+  number: string;
+  timestamp: string;
+  isBotStoped: boolean;
+  name?: string;
+  wasWelcome: boolean;
+  lastMessageFromBot: boolean;
+  timeoutId: string | null;
+}
 
 export class Api {
   api: AxiosInstance; // Tipagem correta para a instância do Axios
@@ -7,8 +17,34 @@ export class Api {
     this.api = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL,
       timeout: 10 * 60 * 1000,
-      headers: { 'X-Custom-Header': 'foobar' }
-    })
+      headers: { "X-Custom-Header": "foobar" },
+    });
+  }
+
+  async getContacts(): Promise<IContact[]> {
+    try {
+      const response: AxiosResponse = await this.api.get("users");
+      return response.data;
+    } catch (e) {
+      console.error("Erro ao buscar contatos: ", e);
+      // Retornar array vazio em caso de erro previne quebras no frontend (map of undefined)cd
+      return [];
+    }
+  }
+
+  async updateContactBotStatus(
+    number: string,
+    isBotStoped: boolean,
+  ): Promise<boolean> {
+    try {
+      // O encodeURIComponent é crítico aqui para que o "@lid" não quebre a rota da API
+      const safeNumber = encodeURIComponent(number);
+      await this.api.put(`users/${safeNumber}`, { isBotStoped });
+      return true;
+    } catch (e) {
+      console.error(`Erro ao atualizar contato ${number}: `, e);
+      return false;
+    }
   }
 
   // --- MÉTODOS DE CONEXÃO ---
@@ -31,7 +67,8 @@ export class Api {
   // --- MÉTODOS DE RESTRIÇÃO ---
   async getAllRestriction() {
     try {
-      const restrictionResponse: AxiosResponse = await this.api.get("restriction");
+      const restrictionResponse: AxiosResponse =
+        await this.api.get("restriction");
       return restrictionResponse.data;
     } catch (e) {
       console.log("Erro ao buscar restrições: ", e);
@@ -39,9 +76,15 @@ export class Api {
     }
   }
 
-  async updateRestriction(id: number, data: { restriction?: string, restrictionNumber?: number }) {
+  async updateRestriction(
+    id: number,
+    data: { restriction?: string; restrictionNumber?: number },
+  ) {
     try {
-      const response: AxiosResponse = await this.api.put(`restriction/${id}`, data);
+      const response: AxiosResponse = await this.api.put(
+        `restriction/${id}`,
+        data,
+      );
       return response;
     } catch (e) {
       console.log("Erro ao atualizar restrições: ", e);
@@ -65,7 +108,10 @@ export class Api {
   async addDefaultMessage(data: { message: string }) {
     try {
       // POST /default_messages/
-      const response: AxiosResponse = await this.api.post("default_messages/", data);
+      const response: AxiosResponse = await this.api.post(
+        "default_messages/",
+        data,
+      );
       return response;
     } catch (e) {
       console.log("Erro ao adicionar mensagem padrão: ", e);
@@ -76,7 +122,10 @@ export class Api {
   async updateMessages(id: number, data: { message: string }) {
     try {
       // PUT /default_messages/:id
-      const response: AxiosResponse = await this.api.put(`default_messages/${id}`, data);
+      const response: AxiosResponse = await this.api.put(
+        `default_messages/${id}`,
+        data,
+      );
       return response;
     } catch (e) {
       console.log("Erro ao atualizar mensagem padrão: ", e);
@@ -87,7 +136,9 @@ export class Api {
   async deleteDefaultMessage(id: number) {
     try {
       // DELETE /whatsapp/default_messages/:id
-      const response: AxiosResponse = await this.api.delete(`default_messages/${id}`);
+      const response: AxiosResponse = await this.api.delete(
+        `default_messages/${id}`,
+      );
       return response;
     } catch (e) {
       console.log("Erro ao deletar mensagem padrão: ", e);

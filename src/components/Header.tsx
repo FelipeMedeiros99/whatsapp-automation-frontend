@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import Image from "next/image"
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { IoClose, IoMenu } from "react-icons/io5";
@@ -9,14 +9,14 @@ export default function Header() {
   const links = [
     { to: "/", key: "Conectar" },
     { to: "/restriction", key: "Configurar restrição" },
-    { to: "/default_messages", key: "Configurar mensagens" }
+    { to: "/default_messages", key: "Configurar mensagens" },
+    { to: "/contacts", key: "Contatos" },
   ];
   const [isRightBarVisible, setIsRightBarVisible] = useState(false);
   const rightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-
       if (rightRef.current && !rightRef.current.contains(e.target as Node)) {
         setIsRightBarVisible(false);
       }
@@ -34,12 +34,12 @@ export default function Header() {
           src={"/images/logo.png"}
           alt="logo gree hotel"
           fill
-          style={{ objectFit: 'contain' }}
+          style={{ objectFit: "contain" }}
         />
       </div>
       <IoMenu
         className="text-3xl cursor-pointer md:hidden"
-        onClick={() => setIsRightBarVisible(prev => !prev)}
+        onClick={() => setIsRightBarVisible((prev) => !prev)}
       />
       <nav className="hidden md:flex space-x-6">
         {links.map((link) => (
@@ -64,25 +64,23 @@ export default function Header() {
           z-40
           transform transition-transform duration-300 ease-in-out
           flex flex-col {/* Layout de coluna para organizar conteúdo */}
-          ${isRightBarVisible ? 'translate-x-0' : 'translate-x-full'}
+          ${isRightBarVisible ? "translate-x-0" : "translate-x-full"}
         `}
       >
-        
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200"> 
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            
-            <div className="relative w-10 h-10"> 
+            <div className="relative w-10 h-10">
               <Image
                 src={"/images/logo.png"}
                 alt="logo gree hotel"
                 fill
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: "contain" }}
               />
             </div>
-            
+
             <span className="text-xl font-bold text-gray-800">GreeHotel</span>
           </div>
-          
+
           <button
             onClick={() => setIsRightBarVisible(false)}
             className="text-gray-500 hover:text-gray-800 text-3xl"
@@ -92,9 +90,8 @@ export default function Header() {
           </button>
         </div>
 
-        
-        <nav className="grow"> 
-          <ul className="flex flex-col space-y-5"> 
+        <nav className="grow">
+          <ul className="flex flex-col space-y-5">
             {links.map((link) => (
               <li key={link.key}>
                 <Link
